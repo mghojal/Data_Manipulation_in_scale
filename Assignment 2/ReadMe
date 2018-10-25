@@ -1,0 +1,42 @@
+During this assignment we will cover dealing with relational algebraic databases by using SQLite , provided with database file “reuters.db” which consist of single table frequency (docid, term, count) where docid is a document identifier corresponding to a particular file of text, term is an English word, and count is the number of the occurrences of the term within the document indicated by docid. 
+This assignment contains 3 main problems and some sub problems described as below:
+	Problem 1: Inspecting the Reuters Dataset; Basic Relational Algebra:
+	select: Query that is equivalent to the following relational algebra expression
+σdocid=10398_txt_earn(frequency)
+
+here we need to know how to use select and run query to find count of occurrence of one document identifier that is pre-defines in the question
+
+	select project: Write a SQL statement that is equivalent to the following relational algebra
+πterm(σdocid=10398_txt_earn and count=1(frequency))
+
+we need to find special document identifier with count of 1 in the database file and return how many records with these values.
+
+	union: SQL statement that is equivalent to the following relational algebra expression. (Hint: you can use the UNION keyword in SQL)
+πterm(σdocid=10398_txt_earn and count=1(frequency)) U πterm(σdocid=925_txt_trade and count=1(frequency))
+
+we need to find number of document identifier with count 1 in the database combine or sum the result with another count of document identifier with count 1 in the same database
+
+	count: SQL statement to count the number of documents containing the word "parliament"
+
+	big documents: SQL statement to find all documents that have more than 300 total terms, including duplicate terms.
+By grouping summation of the count by “sum(count)” we put a condition that use have statement that sum more than 300
+
+	two words: SQL statement to count the number of unique documents that contain both the word 'transactions' and the word 'world'.
+In this task we use inner join to find the both terms that we defined
+
+	Problem 2: Matrix Multiplication in SQL
+	multiply: Express A x B as a SQL query
+Systems designed to efficiently support sparse matrices look a lot like databases: They represent each cell as a record (i,j,value). The benefit is that you only need one record for every non-zero element of a matrix. Since you can represent a sparse matrix as a table, it's reasonable to consider whether you can express matrix multiplication as a SQL query and whether it makes sense to do so.
+Within matrix.db, there are two matrices A and B represented as follows:
+A(row_num, col_num, value)
+B(row_num, col_num, value)
+The matrix A and matrix B are both square matrices with 5 rows and 5 columns each, where columns are sorted in an ascending way starting from row number after column number for both tables (matrixes A, and B) so we need to sum the multiplication of the values of in A for the rows and B for the columns that have the same value and making sure that column of A for that value is equal to row of B to get the right multiplications, then to aggregate the values by the same representation of rows of A and columns of B to get the value of the needed element
+
+	Problem 3: Working with a Term-Document Matrix
+	similarity matrix: Query to compute the similarity matrix DDT.
+The reuters dataset can be considered a term-document matrix, which is an important representation for text analytics. Each row of the matrix is a document vector, with one column for every term in the entire corpus. Naturally, some documents may not contain a given term, so this matrix is rather sparse. The value in each cell of the matrix is the term frequency.
+So to compute the similarity we can multiply the matrix with its own transpose S=DD^T, and we will have an (unnormalized) measure of similarity. The result is a square document-document matrix, where each cell represents the similarity. Here, similarity is pretty simple: if two documents both contain a term, then the score goes up by the product of the two term frequencies. This score is equivalent to the dot product of the two document vectors.
+So the solution is, we define two virtual tables A and B which they are the same as frequency from reuters.db and we join them together where term of A should be equal to the term of B and we sum the multiplication of the count for these terms for pre-defined identifiers for A and B which bill be aggregated as docid of A and B
+
+	keyword search: Best matching document to the keyword query "Washington taxes treasury".
+Here we need to do the same as the task before but have specific words in the terms column as mentioned before which we will define as union keywords and have count 1 with document identifier is q. the solution is by providing those specific conditions first and filter the table and provided as view table called keywords then find the similarity according to the same query used in the example before and set it in order to extract the highest similarity value as the question
